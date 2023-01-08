@@ -1,0 +1,8 @@
+{
+  "name": "chat-app",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "react",
+  "id": "0b481564"
+}
