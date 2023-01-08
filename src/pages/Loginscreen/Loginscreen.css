@@ -1,0 +1,23 @@
+ion-note[slot="error"] {
+  display: block;
+}
+
+.auth-form {
+  width: 90vw;
+  margin: auto;
+  padding-top: 50px;
+}
+
+.auth-item {
+  --background: transparent;
+}
+
+.show-password-icon {
+  font-size: 0.9rem;
+  display: flex;
+}
+
+.login-submit-button {
+  width: 100%;
+  margin-top: 25px;
+}

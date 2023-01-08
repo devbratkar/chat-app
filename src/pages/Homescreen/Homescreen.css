@@ -1,0 +1,60 @@
+.user-chat-container {
+  padding-top: 10px;
+}
+
+.user {
+  width: 100%;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  padding-left: 1rem;
+  padding-right: 1rem;
+
+  display: flex;
+
+  gap: 15px;
+  margin-bottom: 5px;
+}
+
+.list-md .user:active {
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.list-ios .user:active {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.user-image {
+  width: 12vw;
+  height: 12vw;
+
+  max-width: 45px;
+  max-height: 45px;
+
+  min-width: 40px;
+  min-height: 40px;
+}
+
+.user-detail {
+  display: flex;
+  flex-direction: column;
+
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.user-detail .user-recent-chat-container {
+  width: 60vw;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.user-detail .user-recent-chat {
+  color: grey;
+  font-size: 0.85rem;
+}
+
+.user-logout {
+  font-size: 1.5rem;
+  margin-right: 15px;
+}
