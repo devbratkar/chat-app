@@ -12,11 +12,10 @@ import {
   IonToolbar,
 } from "@ionic/react";
 
-import React, { useState } from "react";
 import "./Loginscreen.css";
-import { eyeSharp, eyeOffSharp } from "ionicons/icons";
 
 import { useForm, Controller } from "react-hook-form";
+import { useHistory } from "react-router";
 
 const Loginscreen = () => {
   const { control, handleSubmit } = useForm({
@@ -26,9 +25,12 @@ const Loginscreen = () => {
       password: "",
     },
   });
+  const history = useHistory();
 
   const loginSubmitHandler = (values: any) => {
     console.log(values);
+    localStorage.setItem("token", "token");
+    history.replace("/");
   };
 
   return (
@@ -97,6 +99,7 @@ const Loginscreen = () => {
               >
                 <IonLabel position="floating">Password</IonLabel>
                 <IonInput
+                  type="password"
                   autocomplete="new-password"
                   inputmode="text"
                   placeholder="Enter your password."

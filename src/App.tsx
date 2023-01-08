@@ -27,31 +27,45 @@ import "@ionic/react/css/display.css";
 import "./theme/variables.css";
 import Homescreen from "./pages/Homescreen/Homescreen";
 import Chatscreen from "./pages/Chatscreen/Chatscreen";
-import Loginscreen from "./pages/Loginscreen/Loginscreen";
 import Authscreen from "./pages/Authscreen/Authscreen";
+import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
 
 setupIonicReact();
 
+export const isAuthenticated = () => {
+  const token = localStorage.getItem("token");
+  return Boolean(token);
+};
 const App: React.FC = () => {
   return (
     <IonApp>
       <IonReactRouter>
         <IonSplitPane contentId="main">
-          {/* <Menu /> */}
           <IonRouterOutlet id="main">
-            <Route path="/" exact={true}>
-              <Redirect to="/home" />
-            </Route>
-            <Route path="/home" exact={true}>
-              <Homescreen />
-            </Route>
-            <Route path="/auth" render={(props) => <Authscreen {...props} />} />
-            <Route path="/chat/:chatId" exact={true}>
-              <Chatscreen />
-            </Route>
+            <ProtectedRoute
+              path="/"
+              exact={true}
+              render={<Redirect to="/home" />}
+            />
+            <ProtectedRoute path="/home" exact={true} render={<Homescreen />} />
+            <ProtectedRoute
+              path="/chat/:chatId"
+              exact={true}
+              render={<Chatscreen />}
+            />
 
-            {/* FALLBACK ROUTE */}
-            <Route component={() => <Redirect to="/home" />} />
+            {!isAuthenticated() ? (
+              <>
+                <Route
+                  path="/auth"
+                  render={(props) => <Authscreen {...props} />}
+                />
+                {/* FALLBACK ROUTE */}
+                <Route render={() => <Redirect to="/auth/login" />} />
+              </>
+            ) : (
+              <Route render={() => <Redirect to="/home" />} />
+            )}
           </IonRouterOutlet>
         </IonSplitPane>
       </IonReactRouter>

@@ -17,15 +17,16 @@ const Authscreen: React.FC<RouteComponentProps> = ({ match }) => {
     <IonPage>
       <IonTabs>
         <IonRouterOutlet>
-          <Route path={`${match.url}`} exact={true}>
-            <Redirect to={`${match.url}/login`} />
-          </Route>
-          <Route path={`${match.url}/login`} exact={true}>
-            <Loginscreen />
-          </Route>
-          <Route path={`${match.url}/signup`} exact={true}>
+          <Route
+            path={`/auth/login`}
+            exact={true}
+            render={() => <Loginscreen />}
+          />
+          <Route path={`/auth/signup`} exact={true}>
             <Signupscreen />
           </Route>
+          {/* FALLBACK ROUTE */}
+          <Route render={() => <Redirect to="/auth/login" />} />
         </IonRouterOutlet>
 
         <IonTabBar slot="bottom">

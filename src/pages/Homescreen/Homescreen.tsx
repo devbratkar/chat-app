@@ -2,6 +2,7 @@ import {
   IonAvatar,
   IonContent,
   IonHeader,
+  IonIcon,
   IonItem,
   IonList,
   IonPage,
@@ -12,46 +13,74 @@ import {
 import React, { useState } from "react";
 import { useHistory } from "react-router";
 import "./Homescreen.css";
+import { logOutOutline } from "ionicons/icons";
+
+const users = [
+  {
+    id: 1,
+    name: "Sapna Kar",
+    phone: "7000689334",
+    imageUrl:
+      "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__340.png",
+    latestMessage: "Hello",
+  },
+  {
+    id: 2,
+    name: "Kaveri Kar",
+    phone: "799591254",
+    imageUrl:
+      "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__340.png",
+    latestMessage: "okay",
+  },
+];
 
 const Homescreen = () => {
   const history = useHistory();
-  const [userData, setUserData] = useState({
-    name: "Devbrat Kar awdawd awdawdawdawdawd",
-    imageUrl:
-      "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__340.png",
-  });
-  const goToChat = (chatId: number) => {
-    history.push(`/chat/${chatId}`, userData);
+
+  const goToChat = (chatId: number, state: any) => {
+    history.push(`/chat/${chatId}`, state);
   };
+
+  const logoutHandler = () => {
+    localStorage.removeItem("token");
+    setTimeout(() => {
+      history.replace("/auth/login");
+    }, 200);
+  };
+
   return (
     <IonPage>
       <IonHeader>
         <IonToolbar>
           <IonTitle slot="start">Chat App</IonTitle>
+          <IonIcon
+            icon={logOutOutline}
+            slot="end"
+            className="user-logout"
+            onClick={logoutHandler}
+          />
         </IonToolbar>
       </IonHeader>
       <IonContent>
         <div className="user-chat-container">
-          {[
-            1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
-          ].map((item, index) => (
-            <div className="user" key={index} onClick={() => goToChat(item)}>
+          {users.map((item, index) => (
+            <div
+              className="user"
+              key={index}
+              onClick={() => goToChat(item?.id, item)}
+            >
               <div className="user-image-container">
                 <IonAvatar className="user-image">
-                  <img
-                    src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__340.png"
-                    alt="User"
-                  />
+                  <img src={item?.imageUrl} alt={item?.name} />
                 </IonAvatar>
               </div>
               <div className="user-detail">
                 <div className="user-name">
-                  <IonText color="dark">Devbrat Kar</IonText>
+                  <IonText color="dark">{item?.name}</IonText>
                 </div>
                 <div className="user-recent-chat-container">
                   <IonText color="medium" className="user-recent-chat">
-                    Hello. How are
-                    you?aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+                    {item?.latestMessage}
                   </IonText>
                 </div>
               </div>
