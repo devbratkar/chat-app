@@ -11,21 +11,33 @@ import {
   IonToolbar,
 } from "@ionic/react";
 import { Controller, useForm } from "react-hook-form";
+import { useDispatch } from "react-redux";
+import { useHistory } from "react-router";
+import { signupAsync } from "src/redux/asyncApi";
+import { AppDispatch } from "src/redux/store";
 
 const Signupscreen = () => {
+  const dispatch = useDispatch<AppDispatch>();
+  const history = useHistory();
+
   const { control, handleSubmit, getValues } = useForm({
     mode: "onChange",
     defaultValues: {
-      name: "",
-      phoneNumber: "",
-      password: "",
-      confirmPassword: "",
+      name: "Devbrat Kar",
+      phone: "7000689334",
+      password: "7000689334",
+      confirmPassword: "7000689334",
     },
   });
 
+
   const signupSubmitHandler = (values: any) => {
-    console.log(values);
-    // Axios call to post this data to backend
+    dispatch(signupAsync(values)).then((res: any) => {
+      const status = res?.payload?.data?.status;
+      if(status === 'success') {
+        history.replace("/")
+      }
+    });
   };
 
   return (
@@ -53,9 +65,8 @@ const Signupscreen = () => {
               field: { name, value, onChange },
             }) => (
               <IonItem
-                className={`auth-item ${
-                  !!error ? "ion-invalid" : "ion-valids"
-                }`}
+                className={`auth-item ${!!error ? "ion-invalid" : "ion-valids"
+                  }`}
               >
                 <IonLabel position="floating">Full Name</IonLabel>
                 <IonInput
@@ -71,7 +82,7 @@ const Signupscreen = () => {
             )}
           />
           <Controller
-            name="phoneNumber"
+            name="phone"
             control={control}
             rules={{
               required: { value: true, message: "This Field is Required." },
@@ -88,9 +99,8 @@ const Signupscreen = () => {
               field: { name, value, onChange },
             }) => (
               <IonItem
-                className={`auth-item ${
-                  !!error ? "ion-invalid" : "ion-valids"
-                }`}
+                className={`auth-item ${!!error ? "ion-invalid" : "ion-valids"
+                  }`}
               >
                 <IonLabel position="floating">Phone Number</IonLabel>
                 <IonInput
@@ -116,9 +126,8 @@ const Signupscreen = () => {
               field: { name, value, onChange },
             }) => (
               <IonItem
-                className={`auth-item ${
-                  !!error ? "ion-invalid" : "ion-valids"
-                }`}
+                className={`auth-item ${!!error ? "ion-invalid" : "ion-valids"
+                  }`}
               >
                 <IonLabel position="floating">Password</IonLabel>
                 <IonInput
@@ -149,9 +158,8 @@ const Signupscreen = () => {
               field: { name, value, onChange },
             }) => (
               <IonItem
-                className={`auth-item ${
-                  !!error ? "ion-invalid" : "ion-valids"
-                }`}
+                className={`auth-item ${!!error ? "ion-invalid" : "ion-valids"
+                  }`}
               >
                 <IonLabel position="floating">Confirm Password</IonLabel>
                 <IonInput

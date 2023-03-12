@@ -2,7 +2,6 @@ import {
   IonButton,
   IonContent,
   IonHeader,
-  IonIcon,
   IonInput,
   IonItem,
   IonLabel,
@@ -16,22 +15,32 @@ import "./Loginscreen.css";
 
 import { useForm, Controller } from "react-hook-form";
 import { useHistory } from "react-router";
+import { useDispatch } from "react-redux";
+import { loginAsync } from "src/redux/asyncApi";
+import { AppDispatch } from "src/redux/store";
+import { useCallback } from "react";
 
 const Loginscreen = () => {
+  const dispatch = useDispatch<AppDispatch>();
   const { control, handleSubmit } = useForm({
     mode: "onChange",
     defaultValues: {
-      phoneNumber: "",
+      phone: "",
       password: "",
     },
   });
   const history = useHistory();
 
-  const loginSubmitHandler = (values: any) => {
-    console.log(values);
-    localStorage.setItem("token", "token");
-    history.replace("/");
-  };
+  const loginSubmitHandler = useCallback((values: any) => {
+    dispatch(loginAsync(values)).then((res: any) => {
+      const status = res?.payload?.data?.status;
+
+      if (status === 'success') {
+        localStorage.setItem("token", "token");
+        history.replace("/");
+      }
+    })
+  }, []);
 
   return (
     <IonPage>
@@ -48,7 +57,7 @@ const Loginscreen = () => {
           )}
         >
           <Controller
-            name="phoneNumber"
+            name="phone"
             control={control}
             rules={{
               required: { value: true, message: "This Field is Required." },
@@ -65,9 +74,8 @@ const Loginscreen = () => {
               field: { name, value, onChange },
             }) => (
               <IonItem
-                className={`auth-item ${
-                  !!error ? "ion-invalid" : "ion-valids"
-                }`}
+                className={`auth-item ${!!error ? "ion-invalid" : "ion-valids"
+                  }`}
               >
                 <IonLabel position="floating">Phone Number</IonLabel>
                 <IonInput
@@ -93,9 +101,8 @@ const Loginscreen = () => {
               field: { name, value, onChange },
             }) => (
               <IonItem
-                className={`auth-item ${
-                  !!error ? "ion-invalid" : "ion-valids"
-                }`}
+                className={`auth-item ${!!error ? "ion-invalid" : "ion-valids"
+                  }`}
               >
                 <IonLabel position="floating">Password</IonLabel>
                 <IonInput
