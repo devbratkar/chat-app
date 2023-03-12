@@ -1,2 +1,2 @@
-export * from './chatsAsync';
-export * from './usersAsync';
+export * from 'src/redux/asyncApi/chatsAsync';
+export * from 'src/redux/asyncApi/usersAsync';

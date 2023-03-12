@@ -1,13 +1,17 @@
 import { createSlice, isAnyOf } from "@reduxjs/toolkit";
-import { fetchAllConversations } from '../asyncApi';
+import { fetchConversation } from '../asyncApi';
 import { fetchAllMyChats } from "../asyncApi";
 
 interface ChatSliceI {
+  conversationId: string | null;
+  usersId: string[] | null;
   conversations: any[];
   users: any[];
 }
 
 const initialState: ChatSliceI = {
+  conversationId: null,
+  usersId: null,
   conversations: [],
   users: [],
 };
@@ -25,11 +29,13 @@ const chatSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addMatcher(
-      isAnyOf(fetchAllConversations.fulfilled),
-      (state, { payload }) => {
-        console.log(payload)
-        // const data = payload.data ? payload?.data : []
-        // state.conversations = [...data]
+      isAnyOf(fetchConversation.fulfilled),
+      (state, { payload }: any) => {
+        const data = payload?.data?.data;
+        const messages = data?.messages ? data?.messages : [];
+        state.usersId = data?.usersId;
+        state.conversationId = data?._id;
+        state.conversations = [...messages];
       });
 
     builder.addMatcher(
