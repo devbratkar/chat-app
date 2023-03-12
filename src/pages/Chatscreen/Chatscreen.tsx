@@ -14,18 +14,25 @@ import {
   IonToolbar,
   useIonViewWillEnter,
 } from "@ionic/react";
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { useLocation, useParams } from "react-router";
 import styles from "./Chatscreen.module.css";
 import { send } from "ionicons/icons/";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootStore } from "../../redux/store";
+import axios from 'axios';
+import { fetchAllConversations } from "../../redux/asyncApi";
+import { DEFAULT_IMG } from "../Homescreen/Homescreen";
 
 type Param = {
   chatId: string;
 };
 
 type LocationState = {
-  name: string;
-  imageUrl: string;
+  usersId: {
+    name: string
+  }[];
+  imageUrl?: string;
 };
 
 type Location = {
@@ -36,6 +43,8 @@ const MY_ID = "1";
 const Chatscreen = () => {
   const { chatId } = useParams<Param>();
   const { state }: Location = useLocation<LocationState>();
+  const { connection } = useSelector((store: RootStore) => store.socket);
+  const dispatch = useDispatch<AppDispatch>();
 
   const [chats, setChats] = useState({
     senderId: "1",
@@ -56,10 +65,15 @@ const Chatscreen = () => {
     ],
   });
 
+  const fetchConversations = useCallback(async (conversationId: string) => {
+    const response = await axios.get(`${process.env.REACT_APP_URL}/conversations/${conversationId}`);
+  }, [])
+
   useIonViewWillEnter(() => {
     // AXIOS CALL FOR DATA FETCHING...
     // I will send my id (sender id) and receiver id (chatId) to backend which will give me back all the data which have these two conditions verified.
     // setChats(data)
+    dispatch(fetchAllConversations({ conversationId: chatId }))
   }, [chatId]);
 
   // IMPLEMENT SOCKET HERE.
@@ -75,10 +89,10 @@ const Chatscreen = () => {
             </IonButtons>
             <div className={styles.user}>
               <IonAvatar className={styles.userImage}>
-                <img src={state?.imageUrl} alt={state?.name} />
+                <img src={state?.imageUrl ?? DEFAULT_IMG} alt={state?.usersId[0]?.name} />
               </IonAvatar>
               <IonText className={styles.username} color="dark">
-                {state?.name}
+                {state?.usersId[0]?.name}
               </IonText>
             </div>
           </div>
@@ -93,11 +107,11 @@ const Chatscreen = () => {
                   <div
                     className={`${styles.singleChat}`}
                     data-time={msg?.time}
-                    // data-time={`${new Date(msg?.time).toLocaleTimeString("en", {
-                    //   hour12: true,
-                    //   hour: "2-digit",
-                    //   minute: "2-digit",
-                    // })}`}
+                  // data-time={`${new Date(msg?.time).toLocaleTimeString("en", {
+                  //   hour12: true,
+                  //   hour: "2-digit",
+                  //   minute: "2-digit",
+                  // })}`}
                   >
                     {msg?.message}
                   </div>
@@ -109,11 +123,11 @@ const Chatscreen = () => {
                 <div
                   className={`${styles.singleChat}`}
                   data-time={msg?.time}
-                  // data-time={new Date().toLocaleTimeString("en", {
-                  //   hour12: true,
-                  //   hour: "2-digit",
-                  //   minute: "2-digit",
-                  // })}
+                // data-time={new Date().toLocaleTimeString("en", {
+                //   hour12: true,
+                //   hour: "2-digit",
+                //   minute: "2-digit",
+                // })}
                 >
                   {msg?.message}
                 </div>

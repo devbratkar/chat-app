@@ -29,6 +29,10 @@ import Homescreen from "./pages/Homescreen/Homescreen";
 import Chatscreen from "./pages/Chatscreen/Chatscreen";
 import Authscreen from "./pages/Authscreen/Authscreen";
 import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
+import { useEffect, useState } from "react";
+import io from 'socket.io-client';
+import { useDispatch } from "react-redux";
+import { initSocket } from "./redux/slices/socketSlice";
 
 setupIonicReact();
 
@@ -37,6 +41,17 @@ export const isAuthenticated = () => {
   return Boolean(token);
 };
 const App: React.FC = () => {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const newSocket = io(`${process.env.REACT_APP_SOCKET_URL}`);
+    dispatch(initSocket(newSocket));
+
+    return () => {
+      newSocket.close()
+    };
+  }, [dispatch]);
+
   return (
     <IonApp>
       <IonReactRouter>
